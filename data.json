@@ -1,0 +1,18 @@
+{
+  "checkboxes": {
+    "test-1": "pass"
+  },
+  "notes": {
+    "test-1": "Works great",
+    "setup-1": "ggg",
+    "setup-2": "dfsfdghsh"
+  },
+  "metadata": {
+    "testDate": "",
+    "tester": "",
+    "environment": "",
+    "browsers": ""
+  },
+  "lastUpdated": "2025-12-09T18:23:35.749Z",
+  "lastUpdatedBy": "Anonymous"
+}

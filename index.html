@@ -500,6 +500,19 @@ tr.failed { background: #fef2f2; }
     <button class="add-issue-btn" onclick="addIssue()">+ Add Issue</button>
   </div>
 
+  <!-- Notes & Observations Section -->
+  <div class="notes-observations" style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-top: 0; color: #1e293b;">NOTES & OBSERVATIONS</h2>
+    <p style="color: #64748b; font-size: 14px; margin-bottom: 15px;">Document general observations, patterns noticed, suggestions for improvement, or anything noteworthy during testing.</p>
+    <textarea id="general-observations" onchange="saveObservations()" placeholder="Enter your testing notes and observations here...
+
+Examples:
+- Performance seemed slower on mobile devices
+- UI inconsistency noticed between Chrome and Firefox
+- Suggest adding confirmation dialog for X action
+- Edge case: What happens when Y?" style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 14px; line-height: 1.6; resize: vertical;"></textarea>
+  </div>
+
   <!-- Sign-off Section -->
   <div class="sign-off">
     <h2>RELEASE SIGN-OFF</h2>
@@ -525,7 +538,7 @@ tr.failed { background: #fef2f2; }
 <script>
 // Configuration
 const POLL_INTERVAL = 5000; // Poll for updates every 5 seconds
-let currentData = { checkboxes: {}, notes: {}, metadata: {}, issues: [], signoff: {} };
+let currentData = { checkboxes: {}, notes: {}, metadata: {}, issues: [], signoff: {}, observations: '' };
 let userName = localStorage.getItem('qa-username') || '';
 
 // Initialize
@@ -623,6 +636,12 @@ function saveSignoff() {
   currentData.signoff = currentData.signoff || {};
   currentData.signoff.conditions = document.getElementById('signoff-conditions').value;
   currentData.signoff.notes = document.getElementById('signoff-notes').value;
+  saveData();
+}
+
+// Save observations
+function saveObservations() {
+  currentData.observations = document.getElementById('general-observations').value;
   saveData();
 }
 
@@ -805,6 +824,9 @@ function loadUI() {
     document.getElementById('signoff-notes').value = currentData.signoff.notes || '';
   }
 
+  // Load observations
+  document.getElementById('general-observations').value = currentData.observations || '';
+
   // Update last updated
   if (currentData.lastUpdated) {
     const date = new Date(currentData.lastUpdated);
@@ -841,6 +863,7 @@ async function saveData() {
         metadata: currentData.metadata,
         issues: currentData.issues,
         signoff: currentData.signoff,
+        observations: currentData.observations,
         updatedBy: userName || 'Anonymous'
       })
     });

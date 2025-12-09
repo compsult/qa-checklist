@@ -40,13 +40,16 @@ app.get('/api/data', (req, res) => {
 // Update data
 app.post('/api/data', (req, res) => {
   try {
-    const { checkboxes, notes, metadata, updatedBy } = req.body;
+    const { checkboxes, notes, metadata, issues, signoff, observations, updatedBy } = req.body;
     const currentData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
     const newData = {
       checkboxes: { ...currentData.checkboxes, ...checkboxes },
       notes: { ...currentData.notes, ...notes },
       metadata: { ...currentData.metadata, ...metadata },
+      issues: issues !== undefined ? issues : (currentData.issues || []),
+      signoff: signoff !== undefined ? { ...currentData.signoff, ...signoff } : (currentData.signoff || {}),
+      observations: observations !== undefined ? observations : (currentData.observations || ''),
       lastUpdated: new Date().toISOString(),
       lastUpdatedBy: updatedBy || 'Anonymous'
     };
@@ -70,6 +73,9 @@ app.post('/api/reset', (req, res) => {
         environment: '',
         browsers: ''
       },
+      issues: [],
+      signoff: {},
+      observations: '',
       lastUpdated: new Date().toISOString(),
       lastUpdatedBy: req.body.updatedBy || 'Anonymous'
     };
