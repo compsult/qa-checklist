@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookingAddOn™ QA Checklist - Release #1</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+  line-height: 1.4;
+}
+.container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+h1 { color: #4F46E5; font-size: 24px; border-bottom: 3px solid #4F46E5; padding-bottom: 10px; margin-top: 0; }
+h2 { color: #1e40af; font-size: 18px; margin-top: 30px; background: #eff6ff; padding: 10px 15px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+h2:hover { background: #dbeafe; }
+h2 .toggle { font-size: 14px; color: #6b7280; }
+h2 .section-progress { font-size: 12px; font-weight: normal; color: #059669; }
+h3 { color: #374151; font-size: 15px; margin-top: 20px; border-left: 4px solid #4F46E5; padding-left: 10px; }
+.section-content { padding-left: 10px; }
+.section-content.collapsed { display: none; }
+
+/* Header info */
+.header-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 25px; padding: 20px; background: #f8fafc; border-radius: 8px; }
+.header-info label { display: block; font-weight: 600; margin-bottom: 5px; color: #374151; }
+.header-info input, .header-info select { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+.header-info input:focus, .header-info select:focus { outline: none; border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+
+/* Sync status */
+.sync-bar { position: sticky; top: 0; background: white; padding: 10px 20px; margin: -30px -30px 20px -30px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+.sync-status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.sync-dot { width: 10px; height: 10px; border-radius: 50%; }
+.sync-dot.connected { background: #10b981; }
+.sync-dot.syncing { background: #f59e0b; animation: pulse 1s infinite; }
+.sync-dot.error { background: #ef4444; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.user-name { display: flex; align-items: center; gap: 8px; }
+.user-name input { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; width: 150px; }
+
+/* Test table */
+table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+th, td { border: 1px solid #e5e7eb; padding: 10px; text-align: left; vertical-align: top; }
+th { background: #f9fafb; font-weight: 600; color: #374151; }
+.checkbox-cell { width: 50px; text-align: center; }
+.test-cell { width: 45%; }
+.notes-cell { width: 45%; }
+.notes-cell textarea { width: 100%; min-height: 60px; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-family: inherit; font-size: 13px; resize: vertical; }
+.notes-cell textarea:focus { outline: none; border-color: #4F46E5; }
+
+/* Custom checkbox */
+.checkbox-wrapper { display: flex; justify-content: center; gap: 10px; }
+.custom-checkbox { position: relative; width: 24px; height: 24px; cursor: pointer; }
+.custom-checkbox input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+.custom-checkbox .checkmark { width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.custom-checkbox.pass .checkmark { border-color: #10b981; background: #d1fae5; }
+.custom-checkbox.fail .checkmark { border-color: #ef4444; background: #fee2e2; }
+.custom-checkbox .checkmark::after { content: ''; display: none; }
+.custom-checkbox.pass .checkmark::after { display: block; content: '✓'; color: #059669; font-weight: bold; }
+.custom-checkbox.fail .checkmark::after { display: block; content: '✗'; color: #dc2626; font-weight: bold; }
+
+/* Row states */
+tr.passed { background: #f0fdf4; }
+tr.failed { background: #fef2f2; }
+
+/* Progress bar */
+.progress-container { margin: 20px 0; }
+.progress-bar { height: 24px; background: #e5e7eb; border-radius: 12px; overflow: hidden; display: flex; }
+.progress-pass { background: #10b981; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; }
+.progress-fail { background: #ef4444; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; }
+.progress-stats { display: flex; justify-content: space-between; margin-top: 8px; font-size: 13px; color: #6b7280; }
+
+/* Summary table */
+.summary-section { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; }
+.summary-table { margin-top: 15px; }
+.summary-table th { background: #4F46E5; color: white; }
+.summary-table td { text-align: center; }
+.summary-table tr:last-child { font-weight: bold; background: #f3f4f6; }
+
+/* Issues table */
+.issues-section { margin-top: 30px; }
+.issues-table textarea { width: 100%; min-height: 40px; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; }
+.severity-select { padding: 6px; border: 1px solid #d1d5db; border-radius: 4px; }
+.add-issue-btn { margin-top: 10px; padding: 8px 16px; background: #4F46E5; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+.add-issue-btn:hover { background: #4338ca; }
+.remove-issue-btn { padding: 4px 8px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; }
+
+/* Sign-off section */
+.sign-off { margin-top: 40px; padding: 25px; border: 2px solid #4F46E5; border-radius: 8px; background: #f8fafc; }
+.sign-off h2 { margin-top: 0; background: none; padding: 0; }
+.sign-off-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px; }
+.approval-options { display: flex; gap: 20px; margin: 15px 0; }
+.approval-options label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+
+/* Buttons */
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+.btn-primary { background: #4F46E5; color: white; }
+.btn-primary:hover { background: #4338ca; }
+.btn-secondary { background: #6b7280; color: white; }
+.btn-secondary:hover { background: #4b5563; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-success { background: #10b981; color: white; }
+.btn-success:hover { background: #059669; }
+
+/* Section intro */
+.section-intro { font-style: italic; color: #6b7280; margin: 10px 0; padding: 8px 12px; background: #fefce8; border-left: 3px solid #eab308; border-radius: 0 4px 4px 0; }
+
+/* Last updated */
+.last-updated { font-size: 12px; color: #6b7280; }
+
+/* Print styles */
+@media print {
+  .sync-bar, .btn-group, .add-issue-btn, .remove-issue-btn { display: none; }
+  .section-content.collapsed { display: block; }
+  body { background: white; }
+  .container { box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="sync-bar">
+    <div class="sync-status">
+      <div class="sync-dot connected" id="syncDot"></div>
+      <span id="syncText">Connected</span>
+      <span class="last-updated" id="lastUpdated"></span>
+    </div>
+    <div class="user-name">
+      <label>Your Name:</label>
+      <input type="text" id="userName" placeholder="Enter your name" onchange="saveUserName()">
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="refreshData()">↻ Refresh</button>
+      <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
+      <button class="btn btn-danger" onclick="resetData()">🗑 Reset All</button>
+    </div>
+  </div>
+
+  <h1>BookingAddOn™ Manual Test Checklist - Release #1</h1>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div class="progress-pass" id="progressPass" style="width: 0%"></div>
+      <div class="progress-fail" id="progressFail" style="width: 0%"></div>
+    </div>
+    <div class="progress-stats">
+      <span id="progressText">0 of 124 tests completed</span>
+      <span><span style="color: #10b981;">●</span> Passed: <span id="passCount">0</span> | <span style="color: #ef4444;">●</span> Failed: <span id="failCount">0</span></span>
+    </div>
+  </div>
+
+  <div class="header-info">
+    <div>
+      <label>Test Date</label>
+      <input type="date" id="meta-testDate" onchange="saveMeta()">
+    </div>
+    <div>
+      <label>Tester(s)</label>
+      <input type="text" id="meta-tester" placeholder="Name(s)" onchange="saveMeta()">
+    </div>
+    <div>
+      <label>Environment</label>
+      <select id="meta-environment" onchange="saveMeta()">
+        <option value="">Select...</option>
+        <option value="local">Local (localhost:3000)</option>
+        <option value="staging">Staging</option>
+        <option value="production">Production</option>
+      </select>
+    </div>
+    <div>
+      <label>Browser(s) Tested</label>
+      <input type="text" id="meta-browsers" placeholder="Chrome, Firefox, Safari..." onchange="saveMeta()">
+    </div>
+  </div>
+
+  <!-- SECTION: Pre-Test Setup -->
+  <h2 onclick="toggleSection('setup')">
+    Pre-Test Setup
+    <span class="section-progress" id="progress-setup"></span>
+    <span class="toggle" id="toggle-setup">▼</span>
+  </h2>
+  <div class="section-content" id="section-setup">
+    <table>
+      <tr><th class="checkbox-cell">Status</th><th class="test-cell">Setup Item</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-setup-1"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Database is running<br><code>docker exec calendar-postgres-1 pg_isready -U calendar_user</code></td><td class="notes-cell"><textarea onchange="saveNote('setup-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-setup-2"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Application is running<br><code>./restart.sh</code></td><td class="notes-cell"><textarea onchange="saveNote('setup-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-setup-3"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Stripe test keys are configured</td><td class="notes-cell"><textarea onchange="saveNote('setup-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-setup-4"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Resend email API key is configured</td><td class="notes-cell"><textarea onchange="saveNote('setup-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-setup-5"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Have access to test email inbox</td><td class="notes-cell"><textarea onchange="saveNote('setup-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 1: Public Booking Flow -->
+  <h2 onclick="toggleSection('s1')">
+    1. PUBLIC BOOKING FLOW (Customer Experience)
+    <span class="section-progress" id="progress-s1"></span>
+    <span class="toggle" id="toggle-s1">▼</span>
+  </h2>
+  <div class="section-content" id="section-s1">
+
+    <h3>1.1 Access Booking Page</h3>
+    <div class="section-intro">URL: <code>/book/demo</code> or <code>/?tenant=demo&type=user</code></div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-1-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Navigate to booking page loads successfully</td><td class="notes-cell"><textarea onchange="saveNote('1-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Calendar loads with available time slots</td><td class="notes-cell"><textarea onchange="saveNote('1-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Business name/branding displays correctly</td><td class="notes-cell"><textarea onchange="saveNote('1-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Business hours are respected (no slots outside hours)</td><td class="notes-cell"><textarea onchange="saveNote('1-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-1-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Break hours are blocked (if configured)</td><td class="notes-cell"><textarea onchange="saveNote('1-1-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>1.2 New User Booking (First-Time Customer)</h3>
+    <div class="section-intro">Test with a brand new email address that hasn't been used before</div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-1-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Click on available time slot opens booking modal</td><td class="notes-cell"><textarea onchange="saveNote('1-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Booking modal shows correct selected time</td><td class="notes-cell"><textarea onchange="saveNote('1-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can enter name and email address</td><td class="notes-cell"><textarea onchange="saveNote('1-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Click "Book Appointment" initiates verification</td><td class="notes-cell"><textarea onchange="saveNote('1-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Email verification modal appears</td><td class="notes-cell"><textarea onchange="saveNote('1-2-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Verification email received in inbox</td><td class="notes-cell"><textarea onchange="saveNote('1-2-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-7"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-7', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-7', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Verification code entry works</td><td class="notes-cell"><textarea onchange="saveNote('1-2-7', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-8"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-8', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-8', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment form (Stripe) appears after verification</td><td class="notes-cell"><textarea onchange="saveNote('1-2-8', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-9"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-9', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-9', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment with test card succeeds (4242 4242 4242 4242)</td><td class="notes-cell"><textarea onchange="saveNote('1-2-9', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-10"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-10', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-10', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Success message displayed after payment</td><td class="notes-cell"><textarea onchange="saveNote('1-2-10', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-11"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-11', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-11', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Confirmation email received</td><td class="notes-cell"><textarea onchange="saveNote('1-2-11', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-2-12"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-12', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-2-12', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appointment appears on calendar</td><td class="notes-cell"><textarea onchange="saveNote('1-2-12', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>1.3 Returning User Booking</h3>
+    <div class="section-intro">Use the same email from the previous test</div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-1-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>System recognizes returning user</td><td class="notes-cell"><textarea onchange="saveNote('1-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Booking completes without re-verification</td><td class="notes-cell"><textarea onchange="saveNote('1-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Weekly limit enforced (if already booked this week)</td><td class="notes-cell"><textarea onchange="saveNote('1-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>1.4 Booking Validation</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-1-4-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot book appointments in the past</td><td class="notes-cell"><textarea onchange="saveNote('1-4-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-4-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot book outside business hours</td><td class="notes-cell"><textarea onchange="saveNote('1-4-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-4-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot double-book same time slot</td><td class="notes-cell"><textarea onchange="saveNote('1-4-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-4-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Minimum notice period enforced</td><td class="notes-cell"><textarea onchange="saveNote('1-4-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-1-4-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-4-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Maximum advance booking limit enforced</td><td class="notes-cell"><textarea onchange="saveNote('1-4-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 2: Self-Service Management -->
+  <h2 onclick="toggleSection('s2')">
+    2. SELF-SERVICE APPOINTMENT MANAGEMENT
+    <span class="section-progress" id="progress-s2"></span>
+    <span class="toggle" id="toggle-s2">▼</span>
+  </h2>
+  <div class="section-content" id="section-s2">
+
+    <h3>2.1 Manage Appointment Link</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-2-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Confirmation email contains "Manage Appointment" link</td><td class="notes-cell"><textarea onchange="saveNote('2-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Click link opens appointment details page</td><td class="notes-cell"><textarea onchange="saveNote('2-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Correct appointment info displayed</td><td class="notes-cell"><textarea onchange="saveNote('2-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancel button visible</td><td class="notes-cell"><textarea onchange="saveNote('2-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>2.2 Cancel Appointment</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-2-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancel appointment (>24 hours away) succeeds</td><td class="notes-cell"><textarea onchange="saveNote('2-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancellation confirmation displayed</td><td class="notes-cell"><textarea onchange="saveNote('2-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancellation email received</td><td class="notes-cell"><textarea onchange="saveNote('2-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appointment removed from calendar</td><td class="notes-cell"><textarea onchange="saveNote('2-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-2-2-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('2-2-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot cancel appointment less than 24 hours away</td><td class="notes-cell"><textarea onchange="saveNote('2-2-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 3: Admin Experience -->
+  <h2 onclick="toggleSection('s3')">
+    3. ADMIN/OWNER EXPERIENCE
+    <span class="section-progress" id="progress-s3"></span>
+    <span class="toggle" id="toggle-s3">▼</span>
+  </h2>
+  <div class="section-content" id="section-s3">
+
+    <h3>3.1 Admin Login</h3>
+    <div class="section-intro">URL: <code>/?tenant=demo&type=admin</code></div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-3-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Login form appears when accessing admin URL</td><td class="notes-cell"><textarea onchange="saveNote('3-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Invalid credentials rejected with error message</td><td class="notes-cell"><textarea onchange="saveNote('3-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Valid credentials accepted</td><td class="notes-cell"><textarea onchange="saveNote('3-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Admin dashboard loads after successful login</td><td class="notes-cell"><textarea onchange="saveNote('3-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>3.2 Admin Calendar View</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-3-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>All appointments visible on calendar</td><td class="notes-cell"><textarea onchange="saveNote('3-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can switch between Day/Week/Month views</td><td class="notes-cell"><textarea onchange="saveNote('3-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appointments show client names</td><td class="notes-cell"><textarea onchange="saveNote('3-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Click appointment to view details</td><td class="notes-cell"><textarea onchange="saveNote('3-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-2-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Drag-and-drop to reschedule works</td><td class="notes-cell"><textarea onchange="saveNote('3-2-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-2-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-2-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Resize appointment to change duration works</td><td class="notes-cell"><textarea onchange="saveNote('3-2-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>3.3 Admin Create Appointment</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-3-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Click empty slot to create appointment</td><td class="notes-cell"><textarea onchange="saveNote('3-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can enter client details (name, email)</td><td class="notes-cell"><textarea onchange="saveNote('3-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appointment saves successfully</td><td class="notes-cell"><textarea onchange="saveNote('3-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-3-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-3-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appears on calendar immediately</td><td class="notes-cell"><textarea onchange="saveNote('3-3-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>3.4 Admin Edit/Delete Appointment</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-3-4-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Edit modal opens with current data populated</td><td class="notes-cell"><textarea onchange="saveNote('3-4-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-4-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can change appointment time</td><td class="notes-cell"><textarea onchange="saveNote('3-4-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-4-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Conflict detection prevents overlapping bookings</td><td class="notes-cell"><textarea onchange="saveNote('3-4-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-4-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Delete button available with confirmation prompt</td><td class="notes-cell"><textarea onchange="saveNote('3-4-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-4-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-4-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Deletion removes appointment from calendar</td><td class="notes-cell"><textarea onchange="saveNote('3-4-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>3.5 Time Blocking ("Show as Filled")</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-3-5-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can select time slots to block</td><td class="notes-cell"><textarea onchange="saveNote('3-5-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-5-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Show as Filled" button works</td><td class="notes-cell"><textarea onchange="saveNote('3-5-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-5-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Blocked slots appear on calendar</td><td class="notes-cell"><textarea onchange="saveNote('3-5-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-5-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Customers cannot book blocked slots</td><td class="notes-cell"><textarea onchange="saveNote('3-5-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-3-5-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('3-5-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can unblock previously blocked slots</td><td class="notes-cell"><textarea onchange="saveNote('3-5-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 4: Settings -->
+  <h2 onclick="toggleSection('s4')">
+    4. SETTINGS CONFIGURATION
+    <span class="section-progress" id="progress-s4"></span>
+    <span class="toggle" id="toggle-s4">▼</span>
+  </h2>
+  <div class="section-content" id="section-s4">
+
+    <h3>4.1 Business Hours</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-4-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Settings modal opens from admin view</td><td class="notes-cell"><textarea onchange="saveNote('4-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can enable/disable individual days</td><td class="notes-cell"><textarea onchange="saveNote('4-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can set start/end times per day</td><td class="notes-cell"><textarea onchange="saveNote('4-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Save persists changes</td><td class="notes-cell"><textarea onchange="saveNote('4-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-1-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-1-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Calendar reflects new hours immediately</td><td class="notes-cell"><textarea onchange="saveNote('4-1-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>4.2 Break Hours & Booking Constraints</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-4-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can enable daily break hours</td><td class="notes-cell"><textarea onchange="saveNote('4-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Break times blocked on calendar</td><td class="notes-cell"><textarea onchange="saveNote('4-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can set advance booking days limit</td><td class="notes-cell"><textarea onchange="saveNote('4-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can set minimum notice hours</td><td class="notes-cell"><textarea onchange="saveNote('4-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-2-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-2-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can set weekly appointment limit</td><td class="notes-cell"><textarea onchange="saveNote('4-2-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>4.3 Payment & Branding</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-4-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can set appointment price</td><td class="notes-cell"><textarea onchange="saveNote('4-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can toggle payment required on/off</td><td class="notes-cell"><textarea onchange="saveNote('4-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can change business name</td><td class="notes-cell"><textarea onchange="saveNote('4-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-3-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can change primary color</td><td class="notes-cell"><textarea onchange="saveNote('4-3-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-4-3-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('4-3-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Changes reflect immediately on calendar</td><td class="notes-cell"><textarea onchange="saveNote('4-3-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 5: Email Notifications -->
+  <h2 onclick="toggleSection('s5')">
+    5. EMAIL NOTIFICATIONS
+    <span class="section-progress" id="progress-s5"></span>
+    <span class="toggle" id="toggle-s5">▼</span>
+  </h2>
+  <div class="section-content" id="section-s5">
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-5-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Confirmation email sent after booking</td><td class="notes-cell"><textarea onchange="saveNote('5-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-5-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Email contains correct appointment details</td><td class="notes-cell"><textarea onchange="saveNote('5-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-5-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Email contains "Manage Appointment" link that works</td><td class="notes-cell"><textarea onchange="saveNote('5-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-5-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Admin receives notification of new booking</td><td class="notes-cell"><textarea onchange="saveNote('5-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-5-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancellation email sent after cancellation</td><td class="notes-cell"><textarea onchange="saveNote('5-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-5-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('5-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Emails include business branding</td><td class="notes-cell"><textarea onchange="saveNote('5-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 6: Payment Processing -->
+  <h2 onclick="toggleSection('s6')">
+    6. PAYMENT PROCESSING
+    <span class="section-progress" id="progress-s6"></span>
+    <span class="toggle" id="toggle-s6">▼</span>
+  </h2>
+  <div class="section-content" id="section-s6">
+    <div class="section-intro">Test Cards: Success = <code>4242 4242 4242 4242</code> | Decline = <code>4000 0000 0000 0002</code></div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-6-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment form (Stripe Elements) loads</td><td class="notes-cell"><textarea onchange="saveNote('6-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-6-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Test card (4242...) accepted successfully</td><td class="notes-cell"><textarea onchange="saveNote('6-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-6-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Declined card (4000...) rejected with error</td><td class="notes-cell"><textarea onchange="saveNote('6-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-6-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Correct amount charged</td><td class="notes-cell"><textarea onchange="saveNote('6-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-6-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('6-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>When payment not required, booking completes without payment</td><td class="notes-cell"><textarea onchange="saveNote('6-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 7: Google Calendar -->
+  <h2 onclick="toggleSection('s7')">
+    7. GOOGLE CALENDAR SYNC
+    <span class="section-progress" id="progress-s7"></span>
+    <span class="toggle" id="toggle-s7">▼</span>
+  </h2>
+  <div class="section-content" id="section-s7">
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-7-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Connect Google Calendar" option in settings</td><td class="notes-cell"><textarea onchange="saveNote('7-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>OAuth flow redirects to Google successfully</td><td class="notes-cell"><textarea onchange="saveNote('7-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>After permission granted, returns to app</td><td class="notes-cell"><textarea onchange="saveNote('7-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Connection status shows "Connected"</td><td class="notes-cell"><textarea onchange="saveNote('7-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>New booking creates Google Calendar event</td><td class="notes-cell"><textarea onchange="saveNote('7-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Rescheduled appointment updates event</td><td class="notes-cell"><textarea onchange="saveNote('7-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-7"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-7', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-7', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancelled appointment removes event</td><td class="notes-cell"><textarea onchange="saveNote('7-7', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-7-8"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-8', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('7-8', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can disconnect Google Calendar</td><td class="notes-cell"><textarea onchange="saveNote('7-8', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 8: Edge Cases & Security -->
+  <h2 onclick="toggleSection('s8')">
+    8. EDGE CASES, MOBILE & SECURITY
+    <span class="section-progress" id="progress-s8"></span>
+    <span class="toggle" id="toggle-s8">▼</span>
+  </h2>
+  <div class="section-content" id="section-s8">
+
+    <h3>8.1 Error Handling</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-8-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Invalid email format rejected with helpful error</td><td class="notes-cell"><textarea onchange="saveNote('8-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Empty required fields rejected</td><td class="notes-cell"><textarea onchange="saveNote('8-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Page refresh maintains user state</td><td class="notes-cell"><textarea onchange="saveNote('8-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Admin session persists across pages</td><td class="notes-cell"><textarea onchange="saveNote('8-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>8.2 Mobile Responsiveness</h3>
+    <div class="section-intro">Test on mobile device or browser dev tools mobile view</div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-8-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Booking page works on mobile</td><td class="notes-cell"><textarea onchange="saveNote('8-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Calendar is usable on mobile</td><td class="notes-cell"><textarea onchange="saveNote('8-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Modals fit on small screens</td><td class="notes-cell"><textarea onchange="saveNote('8-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Touch interactions work properly</td><td class="notes-cell"><textarea onchange="saveNote('8-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>8.3 Security</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-8-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot access admin features without login</td><td class="notes-cell"><textarea onchange="saveNote('8-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Password not visible when typing</td><td class="notes-cell"><textarea onchange="saveNote('8-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Client emails not exposed in public calendar views</td><td class="notes-cell"><textarea onchange="saveNote('8-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-3-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Manage links are unique/unguessable (long random tokens)</td><td class="notes-cell"><textarea onchange="saveNote('8-3-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-8-3-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('8-3-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Logout clears session completely</td><td class="notes-cell"><textarea onchange="saveNote('8-3-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="summary-section">
+    <h2 style="cursor: default;">TEST SUMMARY</h2>
+    <table class="summary-table" id="summaryTable">
+      <tr><th>Category</th><th>Total</th><th>Passed</th><th>Failed</th><th>Untested</th></tr>
+      <tr><td>Pre-Test Setup</td><td id="sum-setup-total">5</td><td id="sum-setup-pass">0</td><td id="sum-setup-fail">0</td><td id="sum-setup-untested">5</td></tr>
+      <tr><td>1. Public Booking Flow</td><td id="sum-s1-total">25</td><td id="sum-s1-pass">0</td><td id="sum-s1-fail">0</td><td id="sum-s1-untested">25</td></tr>
+      <tr><td>2. Self-Service Management</td><td id="sum-s2-total">9</td><td id="sum-s2-pass">0</td><td id="sum-s2-fail">0</td><td id="sum-s2-untested">9</td></tr>
+      <tr><td>3. Admin Experience</td><td id="sum-s3-total">24</td><td id="sum-s3-pass">0</td><td id="sum-s3-fail">0</td><td id="sum-s3-untested">24</td></tr>
+      <tr><td>4. Settings Configuration</td><td id="sum-s4-total">15</td><td id="sum-s4-pass">0</td><td id="sum-s4-fail">0</td><td id="sum-s4-untested">15</td></tr>
+      <tr><td>5. Email Notifications</td><td id="sum-s5-total">6</td><td id="sum-s5-pass">0</td><td id="sum-s5-fail">0</td><td id="sum-s5-untested">6</td></tr>
+      <tr><td>6. Payment Processing</td><td id="sum-s6-total">5</td><td id="sum-s6-pass">0</td><td id="sum-s6-fail">0</td><td id="sum-s6-untested">5</td></tr>
+      <tr><td>7. Google Calendar Sync</td><td id="sum-s7-total">8</td><td id="sum-s7-pass">0</td><td id="sum-s7-fail">0</td><td id="sum-s7-untested">8</td></tr>
+      <tr><td>8. Edge Cases & Security</td><td id="sum-s8-total">13</td><td id="sum-s8-pass">0</td><td id="sum-s8-fail">0</td><td id="sum-s8-untested">13</td></tr>
+      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>110</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>110</strong></td></tr>
+    </table>
+  </div>
+
+  <!-- Issues Section -->
+  <div class="issues-section">
+    <h2 style="cursor: default;">CRITICAL ISSUES FOUND</h2>
+    <table id="issuesTable">
+      <tr><th style="width: 100px;">Severity</th><th style="width: 150px;">Category</th><th>Description</th><th style="width: 80px;">Action</th></tr>
+    </table>
+    <button class="add-issue-btn" onclick="addIssue()">+ Add Issue</button>
+  </div>
+
+  <!-- Sign-off Section -->
+  <div class="sign-off">
+    <h2>RELEASE SIGN-OFF</h2>
+    <div class="approval-options">
+      <label><input type="radio" name="approval" value="yes" onchange="saveApproval(this.value)"> ✅ Yes - Approved for Release</label>
+      <label><input type="radio" name="approval" value="conditional" onchange="saveApproval(this.value)"> ⚠️ Yes (with conditions)</label>
+      <label><input type="radio" name="approval" value="no" onchange="saveApproval(this.value)"> ❌ No - Not Ready</label>
+    </div>
+    <div class="sign-off-grid">
+      <div>
+        <label>Conditions/Blockers (if any):</label>
+        <textarea id="signoff-conditions" onchange="saveSignoff()" placeholder="List any conditions or blocking issues..." style="width: 100%; min-height: 80px; margin-top: 5px;"></textarea>
+      </div>
+      <div>
+        <label>Final Notes:</label>
+        <textarea id="signoff-notes" onchange="saveSignoff()" placeholder="Any final observations..." style="width: 100%; min-height: 80px; margin-top: 5px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Configuration
+const POLL_INTERVAL = 5000; // Poll for updates every 5 seconds
+let currentData = { checkboxes: {}, notes: {}, metadata: {}, issues: [], signoff: {} };
+let userName = localStorage.getItem('qa-username') || '';
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('userName').value = userName;
+  loadData();
+  setInterval(pollForUpdates, POLL_INTERVAL);
+});
+
+// Save username to localStorage
+function saveUserName() {
+  userName = document.getElementById('userName').value;
+  localStorage.setItem('qa-username', userName);
+}
+
+// Toggle section collapse
+function toggleSection(sectionId) {
+  const section = document.getElementById('section-' + sectionId);
+  const toggle = document.getElementById('toggle-' + sectionId);
+  if (section.classList.contains('collapsed')) {
+    section.classList.remove('collapsed');
+    toggle.textContent = '▼';
+  } else {
+    section.classList.add('collapsed');
+    toggle.textContent = '▶';
+  }
+}
+
+// Toggle checkbox
+function toggleCheck(testId, type) {
+  const currentState = currentData.checkboxes[testId];
+  let newState;
+
+  if (currentState === type) {
+    newState = null; // Uncheck if clicking same type
+  } else {
+    newState = type;
+  }
+
+  currentData.checkboxes[testId] = newState;
+  updateCheckboxUI(testId, newState);
+  saveData();
+}
+
+// Update checkbox UI
+function updateCheckboxUI(testId, state) {
+  const row = document.getElementById('row-' + testId);
+  if (!row) return;
+
+  const checkboxes = row.querySelectorAll('.custom-checkbox');
+  checkboxes.forEach(cb => {
+    cb.classList.remove('pass', 'fail');
+  });
+
+  row.classList.remove('passed', 'failed');
+
+  if (state === 'pass') {
+    checkboxes[0].classList.add('pass');
+    row.classList.add('passed');
+  } else if (state === 'fail') {
+    if (checkboxes[1]) checkboxes[1].classList.add('fail');
+    else checkboxes[0].classList.add('fail');
+    row.classList.add('failed');
+  }
+
+  updateProgress();
+}
+
+// Save note
+function saveNote(testId, value) {
+  currentData.notes[testId] = value;
+  saveData();
+}
+
+// Save metadata
+function saveMeta() {
+  currentData.metadata = {
+    testDate: document.getElementById('meta-testDate').value,
+    tester: document.getElementById('meta-tester').value,
+    environment: document.getElementById('meta-environment').value,
+    browsers: document.getElementById('meta-browsers').value
+  };
+  saveData();
+}
+
+// Save approval
+function saveApproval(value) {
+  currentData.signoff = currentData.signoff || {};
+  currentData.signoff.approval = value;
+  saveData();
+}
+
+// Save signoff
+function saveSignoff() {
+  currentData.signoff = currentData.signoff || {};
+  currentData.signoff.conditions = document.getElementById('signoff-conditions').value;
+  currentData.signoff.notes = document.getElementById('signoff-notes').value;
+  saveData();
+}
+
+// Add issue
+function addIssue() {
+  currentData.issues = currentData.issues || [];
+  currentData.issues.push({ severity: 'MEDIUM', category: '', description: '' });
+  renderIssues();
+  saveData();
+}
+
+// Remove issue
+function removeIssue(index) {
+  currentData.issues.splice(index, 1);
+  renderIssues();
+  saveData();
+}
+
+// Update issue
+function updateIssue(index, field, value) {
+  currentData.issues[index][field] = value;
+  saveData();
+}
+
+// Render issues table
+function renderIssues() {
+  const table = document.getElementById('issuesTable');
+  // Keep header row
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
+
+  (currentData.issues || []).forEach((issue, index) => {
+    const row = table.insertRow();
+    row.innerHTML = `
+      <td><select class="severity-select" onchange="updateIssue(${index}, 'severity', this.value)">
+        <option value="HIGH" ${issue.severity === 'HIGH' ? 'selected' : ''}>🔴 HIGH</option>
+        <option value="MEDIUM" ${issue.severity === 'MEDIUM' ? 'selected' : ''}>🟡 MEDIUM</option>
+        <option value="LOW" ${issue.severity === 'LOW' ? 'selected' : ''}>🟢 LOW</option>
+      </select></td>
+      <td><input type="text" value="${issue.category || ''}" onchange="updateIssue(${index}, 'category', this.value)" placeholder="Category..." style="width: 100%; padding: 6px;"></td>
+      <td><textarea onchange="updateIssue(${index}, 'description', this.value)" placeholder="Describe the issue...">${issue.description || ''}</textarea></td>
+      <td><button class="remove-issue-btn" onclick="removeIssue(${index})">✕</button></td>
+    `;
+  });
+}
+
+// Update progress bar and counts
+function updateProgress() {
+  let total = 0, passed = 0, failed = 0;
+
+  // Count all test rows
+  document.querySelectorAll('[id^="row-"]').forEach(row => {
+    total++;
+    const testId = row.id.replace('row-', '');
+    const state = currentData.checkboxes[testId];
+    if (state === 'pass') passed++;
+    else if (state === 'fail') failed++;
+  });
+
+  const passPercent = total > 0 ? (passed / total * 100) : 0;
+  const failPercent = total > 0 ? (failed / total * 100) : 0;
+
+  document.getElementById('progressPass').style.width = passPercent + '%';
+  document.getElementById('progressPass').textContent = passed > 0 ? passed + ' passed' : '';
+  document.getElementById('progressFail').style.width = failPercent + '%';
+  document.getElementById('progressFail').textContent = failed > 0 ? failed + ' failed' : '';
+  document.getElementById('progressText').textContent = `${passed + failed} of ${total} tests completed`;
+  document.getElementById('passCount').textContent = passed;
+  document.getElementById('failCount').textContent = failed;
+
+  // Update section progress
+  updateSectionProgress();
+  updateSummaryTable();
+}
+
+// Update section progress indicators
+function updateSectionProgress() {
+  const sections = ['setup', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'];
+  sections.forEach(section => {
+    let total = 0, passed = 0, failed = 0;
+    document.querySelectorAll(`#section-${section} [id^="row-"]`).forEach(row => {
+      total++;
+      const testId = row.id.replace('row-', '');
+      const state = currentData.checkboxes[testId];
+      if (state === 'pass') passed++;
+      else if (state === 'fail') failed++;
+    });
+
+    const el = document.getElementById('progress-' + section);
+    if (el && total > 0) {
+      if (failed > 0) {
+        el.textContent = `${passed}/${total} ✓ ${failed} ✗`;
+        el.style.color = '#ef4444';
+      } else if (passed === total) {
+        el.textContent = `${passed}/${total} ✓`;
+        el.style.color = '#10b981';
+      } else {
+        el.textContent = `${passed}/${total}`;
+        el.style.color = '#6b7280';
+      }
+    }
+  });
+}
+
+// Update summary table
+function updateSummaryTable() {
+  const sections = {
+    'setup': 'setup',
+    's1': 's1', 's2': 's2', 's3': 's3', 's4': 's4',
+    's5': 's5', 's6': 's6', 's7': 's7', 's8': 's8'
+  };
+
+  let grandTotal = 0, grandPass = 0, grandFail = 0;
+
+  Object.keys(sections).forEach(section => {
+    let total = 0, passed = 0, failed = 0;
+    document.querySelectorAll(`#section-${section} [id^="row-"]`).forEach(row => {
+      total++;
+      const testId = row.id.replace('row-', '');
+      const state = currentData.checkboxes[testId];
+      if (state === 'pass') passed++;
+      else if (state === 'fail') failed++;
+    });
+
+    const untested = total - passed - failed;
+    grandTotal += total;
+    grandPass += passed;
+    grandFail += failed;
+
+    const prefix = 'sum-' + section + '-';
+    if (document.getElementById(prefix + 'total')) {
+      document.getElementById(prefix + 'total').textContent = total;
+      document.getElementById(prefix + 'pass').textContent = passed;
+      document.getElementById(prefix + 'fail').textContent = failed;
+      document.getElementById(prefix + 'untested').textContent = untested;
+    }
+  });
+
+  document.getElementById('sum-total-total').innerHTML = '<strong>' + grandTotal + '</strong>';
+  document.getElementById('sum-total-pass').innerHTML = '<strong>' + grandPass + '</strong>';
+  document.getElementById('sum-total-fail').innerHTML = '<strong>' + grandFail + '</strong>';
+  document.getElementById('sum-total-untested').innerHTML = '<strong>' + (grandTotal - grandPass - grandFail) + '</strong>';
+}
+
+// Load all UI from data
+function loadUI() {
+  // Load checkboxes
+  Object.keys(currentData.checkboxes).forEach(testId => {
+    updateCheckboxUI(testId, currentData.checkboxes[testId]);
+  });
+
+  // Load notes
+  Object.keys(currentData.notes).forEach(testId => {
+    const row = document.getElementById('row-' + testId);
+    if (row) {
+      const textarea = row.querySelector('textarea');
+      if (textarea) textarea.value = currentData.notes[testId] || '';
+    }
+  });
+
+  // Load metadata
+  if (currentData.metadata) {
+    document.getElementById('meta-testDate').value = currentData.metadata.testDate || '';
+    document.getElementById('meta-tester').value = currentData.metadata.tester || '';
+    document.getElementById('meta-environment').value = currentData.metadata.environment || '';
+    document.getElementById('meta-browsers').value = currentData.metadata.browsers || '';
+  }
+
+  // Load issues
+  renderIssues();
+
+  // Load signoff
+  if (currentData.signoff) {
+    const approval = currentData.signoff.approval;
+    if (approval) {
+      document.querySelector(`input[name="approval"][value="${approval}"]`).checked = true;
+    }
+    document.getElementById('signoff-conditions').value = currentData.signoff.conditions || '';
+    document.getElementById('signoff-notes').value = currentData.signoff.notes || '';
+  }
+
+  // Update last updated
+  if (currentData.lastUpdated) {
+    const date = new Date(currentData.lastUpdated);
+    document.getElementById('lastUpdated').textContent =
+      `Last updated: ${date.toLocaleTimeString()} by ${currentData.lastUpdatedBy || 'Unknown'}`;
+  }
+
+  updateProgress();
+}
+
+// API calls
+async function loadData() {
+  setSyncStatus('syncing', 'Loading...');
+  try {
+    const response = await fetch('/api/data');
+    currentData = await response.json();
+    loadUI();
+    setSyncStatus('connected', 'Connected');
+  } catch (error) {
+    console.error('Failed to load data:', error);
+    setSyncStatus('error', 'Connection error');
+  }
+}
+
+async function saveData() {
+  setSyncStatus('syncing', 'Saving...');
+  try {
+    const response = await fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        checkboxes: currentData.checkboxes,
+        notes: currentData.notes,
+        metadata: currentData.metadata,
+        issues: currentData.issues,
+        signoff: currentData.signoff,
+        updatedBy: userName || 'Anonymous'
+      })
+    });
+    const result = await response.json();
+    currentData = result.data;
+    document.getElementById('lastUpdated').textContent =
+      `Last updated: ${new Date().toLocaleTimeString()} by ${userName || 'Anonymous'}`;
+    setSyncStatus('connected', 'Saved');
+  } catch (error) {
+    console.error('Failed to save data:', error);
+    setSyncStatus('error', 'Save failed');
+  }
+}
+
+async function pollForUpdates() {
+  try {
+    const response = await fetch('/api/data');
+    const newData = await response.json();
+
+    // Only update if data changed (compare timestamps)
+    if (newData.lastUpdated !== currentData.lastUpdated) {
+      currentData = newData;
+      loadUI();
+      setSyncStatus('connected', 'Updated');
+    }
+  } catch (error) {
+    setSyncStatus('error', 'Sync error');
+  }
+}
+
+function refreshData() {
+  loadData();
+}
+
+async function resetData() {
+  if (!confirm('Are you sure you want to reset ALL test data? This cannot be undone.')) return;
+  if (!confirm('This will clear all checkboxes, notes, and issues. Continue?')) return;
+
+  try {
+    await fetch('/api/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updatedBy: userName || 'Anonymous' })
+    });
+    location.reload();
+  } catch (error) {
+    alert('Failed to reset data');
+  }
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `qa-checklist-export-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function setSyncStatus(status, text) {
+  const dot = document.getElementById('syncDot');
+  const textEl = document.getElementById('syncText');
+  dot.className = 'sync-dot ' + status;
+  textEl.textContent = text;
+}
+</script>
+
+</body>
+</html>
