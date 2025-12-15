@@ -473,6 +473,67 @@ tr.failed { background: #fef2f2; }
     </table>
   </div>
 
+  <!-- SECTION 9: Two-Factor Authentication -->
+  <h2 onclick="toggleSection('s9')">
+    9. TWO-FACTOR AUTHENTICATION (2FA)
+    <span class="section-progress" id="progress-s9"></span>
+    <span class="toggle" id="toggle-s9">▼</span>
+  </h2>
+  <div class="section-content" id="section-s9">
+
+    <h3>9.1 2FA Setup & Configuration</h3>
+    <div class="section-intro">Access via Admin Settings → Security/2FA tab</div>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-9-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>2FA settings accessible from admin panel</td><td class="notes-cell"><textarea onchange="saveNote('9-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can choose between Email and Authenticator App methods</td><td class="notes-cell"><textarea onchange="saveNote('9-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>2FA status correctly shows enabled/disabled state</td><td class="notes-cell"><textarea onchange="saveNote('9-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can disable 2FA after enabling (requires verification)</td><td class="notes-cell"><textarea onchange="saveNote('9-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>9.2 Email-Based 2FA</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-9-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Enabling Email 2FA sends verification code to admin email</td><td class="notes-cell"><textarea onchange="saveNote('9-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Login prompts for email code when 2FA enabled</td><td class="notes-cell"><textarea onchange="saveNote('9-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Correct code allows login</td><td class="notes-cell"><textarea onchange="saveNote('9-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-2-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Incorrect code rejected with error message</td><td class="notes-cell"><textarea onchange="saveNote('9-2-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-2-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can request new code ("Resend Code" works)</td><td class="notes-cell"><textarea onchange="saveNote('9-2-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-2-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-2-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Code expires after reasonable time (e.g., 10 minutes)</td><td class="notes-cell"><textarea onchange="saveNote('9-2-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>9.3 TOTP-Based 2FA (Authenticator App)</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-9-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Setup displays QR code for authenticator app</td><td class="notes-cell"><textarea onchange="saveNote('9-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Manual entry key provided as alternative to QR</td><td class="notes-cell"><textarea onchange="saveNote('9-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>QR code scans successfully in Google/Microsoft Authenticator</td><td class="notes-cell"><textarea onchange="saveNote('9-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Must verify TOTP code to complete setup</td><td class="notes-cell"><textarea onchange="saveNote('9-3-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Login prompts for authenticator code when TOTP enabled</td><td class="notes-cell"><textarea onchange="saveNote('9-3-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-6"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-6', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-6', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Correct TOTP code allows login</td><td class="notes-cell"><textarea onchange="saveNote('9-3-6', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-3-7"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-7', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-3-7', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Incorrect/expired TOTP code rejected</td><td class="notes-cell"><textarea onchange="saveNote('9-3-7', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>9.4 Backup Codes</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-9-4-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Backup codes generated when 2FA enabled</td><td class="notes-cell"><textarea onchange="saveNote('9-4-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-4-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can view/download backup codes from settings</td><td class="notes-cell"><textarea onchange="saveNote('9-4-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-4-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Backup code can be used instead of 2FA code at login</td><td class="notes-cell"><textarea onchange="saveNote('9-4-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-4-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Each backup code works only once (single-use)</td><td class="notes-cell"><textarea onchange="saveNote('9-4-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-4-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-4-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Can regenerate new backup codes (invalidates old ones)</td><td class="notes-cell"><textarea onchange="saveNote('9-4-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>9.5 2FA Security</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-9-5-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Rate limiting on 2FA code attempts (prevents brute force)</td><td class="notes-cell"><textarea onchange="saveNote('9-5-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-5-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cannot bypass 2FA by directly accessing admin URLs</td><td class="notes-cell"><textarea onchange="saveNote('9-5-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-5-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>2FA secrets/codes not exposed in browser console or network</td><td class="notes-cell"><textarea onchange="saveNote('9-5-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-9-5-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('9-5-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Disabling 2FA requires current password or active 2FA code</td><td class="notes-cell"><textarea onchange="saveNote('9-5-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
   <!-- Summary Section -->
   <div class="summary-section">
     <h2 style="cursor: default;">TEST SUMMARY</h2>
@@ -487,7 +548,8 @@ tr.failed { background: #fef2f2; }
       <tr><td>6. Payment Processing</td><td id="sum-s6-total">5</td><td id="sum-s6-pass">0</td><td id="sum-s6-fail">0</td><td id="sum-s6-untested">5</td></tr>
       <tr><td>7. Google Calendar Sync</td><td id="sum-s7-total">8</td><td id="sum-s7-pass">0</td><td id="sum-s7-fail">0</td><td id="sum-s7-untested">8</td></tr>
       <tr><td>8. Edge Cases & Security</td><td id="sum-s8-total">13</td><td id="sum-s8-pass">0</td><td id="sum-s8-fail">0</td><td id="sum-s8-untested">13</td></tr>
-      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>110</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>110</strong></td></tr>
+      <tr><td>9. Two-Factor Authentication</td><td id="sum-s9-total">26</td><td id="sum-s9-pass">0</td><td id="sum-s9-fail">0</td><td id="sum-s9-untested">26</td></tr>
+      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>136</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>136</strong></td></tr>
     </table>
   </div>
 
@@ -720,7 +782,7 @@ function updateProgress() {
 
 // Update section progress indicators
 function updateSectionProgress() {
-  const sections = ['setup', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'];
+  const sections = ['setup', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9'];
   sections.forEach(section => {
     let total = 0, passed = 0, failed = 0;
     document.querySelectorAll(`#section-${section} [id^="row-"]`).forEach(row => {
@@ -752,7 +814,7 @@ function updateSummaryTable() {
   const sections = {
     'setup': 'setup',
     's1': 's1', 's2': 's2', 's3': 's3', 's4': 's4',
-    's5': 's5', 's6': 's6', 's7': 's7', 's8': 's8'
+    's5': 's5', 's6': 's6', 's7': 's7', 's8': 's8', 's9': 's9'
   };
 
   let grandTotal = 0, grandPass = 0, grandFail = 0;
