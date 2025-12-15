@@ -179,23 +179,6 @@ tr.failed { background: #fef2f2; }
     </div>
   </div>
 
-  <!-- SECTION: Pre-Test Setup -->
-  <h2 onclick="toggleSection('setup')">
-    Pre-Test Setup
-    <span class="section-progress" id="progress-setup"></span>
-    <span class="toggle" id="toggle-setup">▼</span>
-  </h2>
-  <div class="section-content" id="section-setup">
-    <table>
-      <tr><th class="checkbox-cell">Status</th><th class="test-cell">Setup Item</th><th class="notes-cell">Notes</th></tr>
-      <tr id="row-setup-1"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Database is running<br><code>docker exec calendar-postgres-1 pg_isready -U calendar_user</code></td><td class="notes-cell"><textarea onchange="saveNote('setup-1', this.value)" placeholder="Notes..."></textarea></td></tr>
-      <tr id="row-setup-2"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Application is running<br><code>./restart.sh</code></td><td class="notes-cell"><textarea onchange="saveNote('setup-2', this.value)" placeholder="Notes..."></textarea></td></tr>
-      <tr id="row-setup-3"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Stripe test keys are configured</td><td class="notes-cell"><textarea onchange="saveNote('setup-3', this.value)" placeholder="Notes..."></textarea></td></tr>
-      <tr id="row-setup-4"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Resend email API key is configured</td><td class="notes-cell"><textarea onchange="saveNote('setup-4', this.value)" placeholder="Notes..."></textarea></td></tr>
-      <tr id="row-setup-5"><td class="checkbox-cell"><div class="checkbox-wrapper"><div class="custom-checkbox" onclick="toggleCheck('setup-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></div></td><td>Have access to test email inbox</td><td class="notes-cell"><textarea onchange="saveNote('setup-5', this.value)" placeholder="Notes..."></textarea></td></tr>
-    </table>
-  </div>
-
   <!-- SECTION 1: Public Booking Flow -->
   <h2 onclick="toggleSection('s1')">
     1. PUBLIC BOOKING FLOW (Customer Experience)
@@ -205,7 +188,7 @@ tr.failed { background: #fef2f2; }
   <div class="section-content" id="section-s1">
 
     <h3>1.1 Access Booking Page</h3>
-    <div class="section-intro">URL: <code>/book/demo</code> or <code>/?tenant=demo&type=user</code></div>
+    <div class="section-intro">URL: <code>/book/demo</code></div>
     <table>
       <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
       <tr id="row-1-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('1-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Navigate to booking page loads successfully</td><td class="notes-cell"><textarea onchange="saveNote('1-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
@@ -478,7 +461,6 @@ tr.failed { background: #fef2f2; }
     <h2 style="cursor: default;">TEST SUMMARY</h2>
     <table class="summary-table" id="summaryTable">
       <tr><th>Category</th><th>Total</th><th>Passed</th><th>Failed</th><th>Untested</th></tr>
-      <tr><td>Pre-Test Setup</td><td id="sum-setup-total">5</td><td id="sum-setup-pass">0</td><td id="sum-setup-fail">0</td><td id="sum-setup-untested">5</td></tr>
       <tr><td>1. Public Booking Flow</td><td id="sum-s1-total">25</td><td id="sum-s1-pass">0</td><td id="sum-s1-fail">0</td><td id="sum-s1-untested">25</td></tr>
       <tr><td>2. Self-Service Management</td><td id="sum-s2-total">9</td><td id="sum-s2-pass">0</td><td id="sum-s2-fail">0</td><td id="sum-s2-untested">9</td></tr>
       <tr><td>3. Admin Experience</td><td id="sum-s3-total">24</td><td id="sum-s3-pass">0</td><td id="sum-s3-fail">0</td><td id="sum-s3-untested">24</td></tr>
@@ -487,7 +469,7 @@ tr.failed { background: #fef2f2; }
       <tr><td>6. Payment Processing</td><td id="sum-s6-total">5</td><td id="sum-s6-pass">0</td><td id="sum-s6-fail">0</td><td id="sum-s6-untested">5</td></tr>
       <tr><td>7. Google Calendar Sync</td><td id="sum-s7-total">8</td><td id="sum-s7-pass">0</td><td id="sum-s7-fail">0</td><td id="sum-s7-untested">8</td></tr>
       <tr><td>8. Edge Cases & Security</td><td id="sum-s8-total">13</td><td id="sum-s8-pass">0</td><td id="sum-s8-fail">0</td><td id="sum-s8-untested">13</td></tr>
-      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>110</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>110</strong></td></tr>
+      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>105</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>105</strong></td></tr>
     </table>
   </div>
 
@@ -720,7 +702,7 @@ function updateProgress() {
 
 // Update section progress indicators
 function updateSectionProgress() {
-  const sections = ['setup', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'];
+  const sections = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'];
   sections.forEach(section => {
     let total = 0, passed = 0, failed = 0;
     document.querySelectorAll(`#section-${section} [id^="row-"]`).forEach(row => {
@@ -750,7 +732,6 @@ function updateSectionProgress() {
 // Update summary table
 function updateSummaryTable() {
   const sections = {
-    'setup': 'setup',
     's1': 's1', 's2': 's2', 's3': 's3', 's4': 's4',
     's5': 's5', 's6': 's6', 's7': 's7', 's8': 's8'
   };
