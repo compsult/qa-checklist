@@ -138,6 +138,8 @@ tr.failed { background: #fef2f2; }
     <div class="btn-group">
       <button class="btn btn-secondary" onclick="refreshData()">↻ Refresh</button>
       <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Import</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
       <button class="btn btn-danger" onclick="resetData()">🗑 Reset All</button>
     </div>
   </div>
@@ -1159,6 +1161,51 @@ function exportData() {
   a.download = `qa-checklist-export-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedData = JSON.parse(e.target.result);
+
+      // Validate the imported data has expected structure
+      if (!importedData.checkboxes || typeof importedData.checkboxes !== 'object') {
+        throw new Error('Invalid file format: missing checkboxes data');
+      }
+
+      // Merge or replace current data
+      if (confirm('Import will replace your current progress. Continue?')) {
+        currentData = {
+          checkboxes: importedData.checkboxes || {},
+          notes: importedData.notes || {},
+          metadata: importedData.metadata || {},
+          issues: importedData.issues || [],
+          signoff: importedData.signoff || {},
+          observations: importedData.observations || ''
+        };
+
+        // Update UI with imported data
+        applyDataToUI();
+        updateProgress();
+        renderIssues();
+
+        // Save to localStorage
+        localStorage.setItem('qa-checklist-data', JSON.stringify(currentData));
+
+        alert('Data imported successfully!');
+      }
+    } catch (error) {
+      alert('Failed to import: ' + error.message);
+    }
+  };
+  reader.readAsText(file);
+
+  // Reset file input so same file can be imported again
+  event.target.value = '';
 }
 
 function setSyncStatus(status, text) {
