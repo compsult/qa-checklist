@@ -769,6 +769,213 @@ tr.failed { background: #fef2f2; }
     </table>
   </div>
 
+  <!-- Section 13: SDK & Embedding -->
+  <h2 onclick="toggleSection('s13')">
+    13. SDK & EMBEDDING
+    <span class="section-progress" id="progress-s13"></span>
+    <span class="toggle" id="toggle-s13">▼</span>
+  </h2>
+  <div class="section-content" id="section-s13">
+    <p class="section-intro">Tests for the embeddable booking widget and SDK integration.</p>
+
+    <h3>13.1 SDK Script Loading</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-13-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>SDK script loads at /sdk/bookingaddon.js without errors</td><td class="notes-cell"><textarea onchange="saveNote('13-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-13-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>SDK initializes with valid tenant config</td><td class="notes-cell"><textarea onchange="saveNote('13-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>13.2 Embed iframe</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-13-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Embed page generates for valid tenant (/api/embed/demo)</td><td class="notes-cell"><textarea onchange="saveNote('13-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-13-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Embed page shows error for invalid tenant</td><td class="notes-cell"><textarea onchange="saveNote('13-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-13-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Embed inherits tenant branding colors</td><td class="notes-cell"><textarea onchange="saveNote('13-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>13.3 SDK Configuration</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-13-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>SDK config returns tenant settings (/api/sdk/config/demo)</td><td class="notes-cell"><textarea onchange="saveNote('13-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-13-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>SDK config rejects invalid tenant with 404</td><td class="notes-cell"><textarea onchange="saveNote('13-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-13-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('13-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>SDK events endpoint accepts webhooks</td><td class="notes-cell"><textarea onchange="saveNote('13-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 14: Demo Mode -->
+  <h2 onclick="toggleSection('s14')">
+    14. DEMO MODE
+    <span class="section-progress" id="progress-s14"></span>
+    <span class="toggle" id="toggle-s14">▼</span>
+  </h2>
+  <div class="section-content" id="section-s14">
+    <p class="section-intro">Tests for demo functionality, rate limiting, and reCAPTCHA protection.</p>
+
+    <h3>14.1 Demo Initialization</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-14-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Demo initializes with fresh data on button click</td><td class="notes-cell"><textarea onchange="saveNote('14-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Second init replaces first session data</td><td class="notes-cell"><textarea onchange="saveNote('14-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>User demo loads booking calendar with sample data</td><td class="notes-cell"><textarea onchange="saveNote('14-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Admin demo loads admin dashboard with analytics</td><td class="notes-cell"><textarea onchange="saveNote('14-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>14.2 Demo Rate Limiting</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-14-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Rate limit allows 10 meaningful actions</td><td class="notes-cell"><textarea onchange="saveNote('14-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>11th action shows "Demo limit reached" error</td><td class="notes-cell"><textarea onchange="saveNote('14-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Rate limit resets after 24 hours</td><td class="notes-cell"><textarea onchange="saveNote('14-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>14.3 Demo reCAPTCHA</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-14-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>reCAPTCHA challenge appears on first demo action</td><td class="notes-cell"><textarea onchange="saveNote('14-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Valid reCAPTCHA allows demo action to proceed</td><td class="notes-cell"><textarea onchange="saveNote('14-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-14-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('14-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>reCAPTCHA persists for session (no repeat challenges)</td><td class="notes-cell"><textarea onchange="saveNote('14-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 15: System Health -->
+  <h2 onclick="toggleSection('s15')">
+    15. SYSTEM HEALTH & MONITORING
+    <span class="section-progress" id="progress-s15"></span>
+    <span class="toggle" id="toggle-s15">▼</span>
+  </h2>
+  <div class="section-content" id="section-s15">
+    <p class="section-intro">Tests for health endpoints and error handling.</p>
+
+    <h3>15.1 Health Endpoint</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-15-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>GET /api/health returns 200 OK</td><td class="notes-cell"><textarea onchange="saveNote('15-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-15-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Health check includes database connection status</td><td class="notes-cell"><textarea onchange="saveNote('15-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-15-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Health endpoint bypasses authentication</td><td class="notes-cell"><textarea onchange="saveNote('15-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>15.2 Error Handling</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-15-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>API errors return proper JSON format { message, error }</td><td class="notes-cell"><textarea onchange="saveNote('15-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-15-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('15-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>500 errors don't expose stack traces in production</td><td class="notes-cell"><textarea onchange="saveNote('15-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 16: Stripe Connect -->
+  <h2 onclick="toggleSection('s16')">
+    16. STRIPE CONNECT
+    <span class="section-progress" id="progress-s16"></span>
+    <span class="toggle" id="toggle-s16">▼</span>
+  </h2>
+  <div class="section-content" id="section-s16">
+    <p class="section-intro">Tests for Stripe Connect OAuth flow and account management.</p>
+
+    <h3>16.1 Connect OAuth Flow</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-16-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Connect Stripe Account" redirects to Stripe OAuth</td><td class="notes-cell"><textarea onchange="saveNote('16-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>OAuth callback saves account and shows "Connected"</td><td class="notes-cell"><textarea onchange="saveNote('16-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Connected account ID/email displays in settings</td><td class="notes-cell"><textarea onchange="saveNote('16-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>16.2 Connect Status</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-16-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>New tenant shows "Not Connected" status</td><td class="notes-cell"><textarea onchange="saveNote('16-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>/api/stripe/status returns connection info</td><td class="notes-cell"><textarea onchange="saveNote('16-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>16.3 Disconnect Flow</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-16-3-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Disconnect" button visible when connected</td><td class="notes-cell"><textarea onchange="saveNote('16-3-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-3-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Disconnect shows confirmation modal</td><td class="notes-cell"><textarea onchange="saveNote('16-3-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-3-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Confirming disconnect removes account link</td><td class="notes-cell"><textarea onchange="saveNote('16-3-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-3-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payments work after reconnecting</td><td class="notes-cell"><textarea onchange="saveNote('16-3-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-16-3-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('16-3-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Disconnect requires admin authentication</td><td class="notes-cell"><textarea onchange="saveNote('16-3-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 17: Unsubscribe & Feedback -->
+  <h2 onclick="toggleSection('s17')">
+    17. UNSUBSCRIBE & FEEDBACK
+    <span class="section-progress" id="progress-s17"></span>
+    <span class="toggle" id="toggle-s17">▼</span>
+  </h2>
+  <div class="section-content" id="section-s17">
+    <p class="section-intro">Tests for subscription cancellation and feedback collection.</p>
+
+    <h3>17.1 Unsubscribe Flow</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-17-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Cancel Subscription" link visible in Account Settings</td><td class="notes-cell"><textarea onchange="saveNote('17-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-17-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancellation shows feedback form modal</td><td class="notes-cell"><textarea onchange="saveNote('17-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-17-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Multiple cancellation reasons available</td><td class="notes-cell"><textarea onchange="saveNote('17-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-17-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>"Other" reason shows custom text field</td><td class="notes-cell"><textarea onchange="saveNote('17-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-17-1-5"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-5', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-1-5', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Submitting marks account inactive with confirmation</td><td class="notes-cell"><textarea onchange="saveNote('17-1-5', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>17.2 Feedback Collection</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-17-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Cancellation reason saved to database</td><td class="notes-cell"><textarea onchange="saveNote('17-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-17-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('17-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Improvement suggestions captured in database</td><td class="notes-cell"><textarea onchange="saveNote('17-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 18: Subdomain Validation -->
+  <h2 onclick="toggleSection('s18')">
+    18. SUBDOMAIN VALIDATION
+    <span class="section-progress" id="progress-s18"></span>
+    <span class="toggle" id="toggle-s18">▼</span>
+  </h2>
+  <div class="section-content" id="section-s18">
+    <p class="section-intro">Tests for subdomain format and availability checking.</p>
+
+    <h3>18.1 Subdomain Format</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-18-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Valid subdomain (my-business) shows ✓ Available</td><td class="notes-cell"><textarea onchange="saveNote('18-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-18-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Special characters (my_business!) rejected</td><td class="notes-cell"><textarea onchange="saveNote('18-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-18-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Too short (ab) shows minimum 3 characters error</td><td class="notes-cell"><textarea onchange="saveNote('18-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-18-1-4"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-4', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-1-4', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Uppercase (MyBusiness) converted to lowercase</td><td class="notes-cell"><textarea onchange="saveNote('18-1-4', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>18.2 Subdomain Availability</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-18-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Existing subdomain (demo) shows ✗ Taken</td><td class="notes-cell"><textarea onchange="saveNote('18-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-18-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('18-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Real-time check updates as user types (debounced)</td><td class="notes-cell"><textarea onchange="saveNote('18-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
+  <!-- Section 19: Payment History -->
+  <h2 onclick="toggleSection('s19')">
+    19. PAYMENT HISTORY & DETAILS
+    <span class="section-progress" id="progress-s19"></span>
+    <span class="toggle" id="toggle-s19">▼</span>
+  </h2>
+  <div class="section-content" id="section-s19">
+    <p class="section-intro">Tests for payment history viewing and details.</p>
+
+    <h3>19.1 Payment History</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-19-1-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Admin can view payment list with dates/amounts</td><td class="notes-cell"><textarea onchange="saveNote('19-1-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-19-1-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment links to associated appointment</td><td class="notes-cell"><textarea onchange="saveNote('19-1-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-19-1-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-1-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment status (Paid/Pending/Refunded) displayed</td><td class="notes-cell"><textarea onchange="saveNote('19-1-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+
+    <h3>19.2 Payment Details</h3>
+    <table>
+      <tr><th class="checkbox-cell">Pass</th><th class="checkbox-cell">Fail</th><th class="test-cell">Test Case</th><th class="notes-cell">Notes</th></tr>
+      <tr id="row-19-2-1"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-1', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-1', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>/api/payments/appointment/[id] returns payment details</td><td class="notes-cell"><textarea onchange="saveNote('19-2-1', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-19-2-2"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-2', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-2', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Appointment without payment returns 404/empty</td><td class="notes-cell"><textarea onchange="saveNote('19-2-2', this.value)" placeholder="Notes..."></textarea></td></tr>
+      <tr id="row-19-2-3"><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-3', 'pass')"><input type="checkbox"><div class="checkmark"></div></div></td><td class="checkbox-cell"><div class="custom-checkbox" onclick="toggleCheck('19-2-3', 'fail')"><input type="checkbox"><div class="checkmark"></div></div></td><td>Payment details include Stripe payment intent ID</td><td class="notes-cell"><textarea onchange="saveNote('19-2-3', this.value)" placeholder="Notes..."></textarea></td></tr>
+    </table>
+  </div>
+
   <!-- Summary Section -->
   <div class="summary-section">
     <h2 style="cursor: default;">TEST SUMMARY</h2>
@@ -786,7 +993,14 @@ tr.failed { background: #fef2f2; }
       <tr><td>10. Super User (Platform Admin)</td><td id="sum-s10-total">22</td><td id="sum-s10-pass">0</td><td id="sum-s10-fail">0</td><td id="sum-s10-untested">22</td></tr>
       <tr><td>11. Staff Management</td><td id="sum-s11-total">18</td><td id="sum-s11-pass">0</td><td id="sum-s11-fail">0</td><td id="sum-s11-untested">18</td></tr>
       <tr><td>12. Registration & Onboarding</td><td id="sum-s12-total">13</td><td id="sum-s12-pass">0</td><td id="sum-s12-fail">0</td><td id="sum-s12-untested">13</td></tr>
-      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>249</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>249</strong></td></tr>
+      <tr><td>13. SDK & Embedding</td><td id="sum-s13-total">8</td><td id="sum-s13-pass">0</td><td id="sum-s13-fail">0</td><td id="sum-s13-untested">8</td></tr>
+      <tr><td>14. Demo Mode</td><td id="sum-s14-total">10</td><td id="sum-s14-pass">0</td><td id="sum-s14-fail">0</td><td id="sum-s14-untested">10</td></tr>
+      <tr><td>15. System Health & Monitoring</td><td id="sum-s15-total">5</td><td id="sum-s15-pass">0</td><td id="sum-s15-fail">0</td><td id="sum-s15-untested">5</td></tr>
+      <tr><td>16. Stripe Connect</td><td id="sum-s16-total">10</td><td id="sum-s16-pass">0</td><td id="sum-s16-fail">0</td><td id="sum-s16-untested">10</td></tr>
+      <tr><td>17. Unsubscribe & Feedback</td><td id="sum-s17-total">7</td><td id="sum-s17-pass">0</td><td id="sum-s17-fail">0</td><td id="sum-s17-untested">7</td></tr>
+      <tr><td>18. Subdomain Validation</td><td id="sum-s18-total">6</td><td id="sum-s18-pass">0</td><td id="sum-s18-fail">0</td><td id="sum-s18-untested">6</td></tr>
+      <tr><td>19. Payment History & Details</td><td id="sum-s19-total">6</td><td id="sum-s19-pass">0</td><td id="sum-s19-fail">0</td><td id="sum-s19-untested">6</td></tr>
+      <tr><td><strong>TOTAL</strong></td><td id="sum-total-total"><strong>301</strong></td><td id="sum-total-pass"><strong>0</strong></td><td id="sum-total-fail"><strong>0</strong></td><td id="sum-total-untested"><strong>301</strong></td></tr>
     </table>
   </div>
 
