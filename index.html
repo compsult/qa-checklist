@@ -181,6 +181,70 @@ tr.failed { background: #fef2f2; }
     </div>
   </div>
 
+  <!-- AUTOMATED TESTING REFERENCE -->
+  <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); color: white; padding: 25px; border-radius: 8px; margin-bottom: 25px;">
+    <h2 style="color: white; background: none; padding: 0; margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px; cursor: default;">
+      <span style="font-size: 24px;">🤖</span> Automated Testing Available
+    </h2>
+    <p style="margin: 0 0 15px 0; opacity: 0.9;">Many tests in this checklist can be run automatically using the QA Test Runner script. Run automated tests first, then focus manual testing on items that require human verification.</p>
+
+    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+      <h3 style="color: #7dd3fc; margin: 0 0 10px 0; padding: 0; border: none; font-size: 14px;">Quick Start</h3>
+      <code style="display: block; background: #0f172a; padding: 12px; border-radius: 4px; font-family: 'Monaco', 'Consolas', monospace; font-size: 13px;">
+        cd /path/to/Calendar<br>
+        ./scripts/qa-tests.bash
+      </code>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+      <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">
+        <h3 style="color: #7dd3fc; margin: 0 0 10px 0; padding: 0; border: none; font-size: 14px;">API Tests (curl-based)</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; opacity: 0.9;">
+          <li>Health Check & System Status</li>
+          <li>Tenant Configuration</li>
+          <li>Appointments CRUD</li>
+          <li>Blocked Slots Management</li>
+          <li>Client Management</li>
+          <li>Settings API</li>
+          <li>Admin Authentication</li>
+          <li>Demo Mode Initialization</li>
+          <li>Self-Service Manage Token</li>
+          <li>Subdomain Validation</li>
+          <li>SDK Endpoints</li>
+        </ul>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">
+        <h3 style="color: #7dd3fc; margin: 0 0 10px 0; padding: 0; border: none; font-size: 14px;">UI Tests (Playwright)</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; opacity: 0.9;">
+          <li>Admin Settings UI</li>
+          <li>Super User Dashboard</li>
+          <li>Admin Frontend</li>
+          <li>Public Booking Flow</li>
+        </ul>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.2); padding: 15px; border-radius: 6px; border: 1px solid rgba(239,68,68,0.3);">
+        <h3 style="color: #fca5a5; margin: 0 0 10px 0; padding: 0; border: none; font-size: 14px;">Manual Testing Required</h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; opacity: 0.9;">
+          <li>Email Notifications (real inbox)</li>
+          <li>Payment Processing (Stripe cards)</li>
+          <li>Google Calendar OAuth</li>
+          <li>Stripe Connect OAuth</li>
+          <li>Mobile Responsiveness</li>
+          <li>reCAPTCHA Verification</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 13px; opacity: 0.8;">
+      <strong>CLI Commands:</strong>
+      <code style="background: #0f172a; padding: 3px 8px; border-radius: 3px; margin-left: 8px;">./scripts/qa-tests.bash api-all</code> (all API tests) |
+      <code style="background: #0f172a; padding: 3px 8px; border-radius: 3px; margin-left: 8px;">./scripts/qa-tests.bash ui-all</code> (all UI tests) |
+      <code style="background: #0f172a; padding: 3px 8px; border-radius: 3px; margin-left: 8px;">./scripts/qa-tests.bash help</code> (see all options)
+    </div>
+  </div>
+
   <!-- SECTION 1: Public Booking Flow -->
   <h2 onclick="toggleSection('s1')">
     1. PUBLIC BOOKING FLOW (Customer Experience)
